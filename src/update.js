@@ -1,13 +1,48 @@
 
 
+function spawnBubble(){
+    if( global.allBubbles.length >= global.maxBubbles ){
+        return
+    }
+    
+    var side = randInt(0,4)   
+    var a = global.screenCorners[side]
+    var b = global.screenCorners[(side+1)%4]
+    var pos = va(a,b,randRange(.4,.6))
+    pos = pos.add( pos.sub(global.screenCenter).mul(.2) )
+    var vel = v(0,0)
+    var m = global.bubbleGmag
+    var g
+    if(side==0) g = v(0,m) 
+    if(side==1) g = v(-m,0) 
+    if(side==2) g = v(0,-m) 
+    if(side==3) g = v(m,0) 
+    var b = new Bubble(pos,vel,g)
+    
+    global.allBubbles.push(b)
+}
+
 function update(dt) { 
     fitToContainer()  
     
+    global.bubbleSpawnCountdown -= dt
+    if( global.bubbleSpawnCountdown < 0 ){
+        spawnBubble()
+        global.bubbleSpawnCountdown = global.bubbleSpawnDelay
+    }
+        
     //debug
     global.debugLines = []
     
     
-    global.allBubbles.forEach(b => b.update(dt))
+    global.allBubbles = global.allBubbles.filter(b => {
+        b.update(dt)
+        if( b.isOob() ){
+            deleteBubble(b.rmi)
+            return false
+        }
+        return true
+    })
     
     // identify all intersecting pairs
     var allb = global.allBubbles
@@ -68,5 +103,6 @@ function fitToContainer(){
         var xr = -global.canvasOffsetX / global.canvasScale
         var yr = -global.canvasOffsetY / global.canvasScale
         global.screenCorners = [v(xr,yr),v(1-xr,yr),v(1-xr,1-yr),v(xr,1-yr)]
+        global.screenCenter = v(.5,.5)
     }
 }

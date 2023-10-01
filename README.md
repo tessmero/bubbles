@@ -1,13 +1,11 @@
 
-Chaotic bouncing balls form pre-determined patterns.
+Bubbles slide around eachother with surface tension effect.
 
-Physics calculations are performed using only whole numbers to avoid platform-dependant rounding errors accumulating over time.
-
-Click to reset.
+Each bubble is treated as a single particle and precise edge shapes are handled by a special 1D physics engine.
 
 ## Demo
 
-https://tessmero.github.io/paintball.html
+https://tessmero.github.io/bubbles.html
 
 ## Usage
 

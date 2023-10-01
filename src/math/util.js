@@ -75,11 +75,29 @@ function dist(a,b){
     return Math.sqrt( dx*dx + dy*dy )
 }
 
+function va(a,b,r=.5){
+    return v(
+        a.x*(1-r)+b.x*r, 
+        a.y*(1-r)+b.y*r
+    )
+}
+
+function avg(a,b,r=.5){
+    return a*(1-r) + b*r
+}
+
 function avg2(a,b,r=.5){
     return [
         a[0]*(1-r) + b[0]*r,
         a[1]*(1-r) + b[1]*r,
     ]
+}
+
+//non negative modulo
+function nnmod(a,b){
+    var r = a%b
+    if( r<0 ) return r+b
+    return r
 }
 
 function shuffle(array) {

@@ -3,8 +3,8 @@
 // Initialize the game
 function init() {
     var cvs = document.getElementById("gameCanvas");
-    cvs.addEventListener("mousemove", mouseMove);
-    cvs.addEventListener("click", mouseClick);
+    //cvs.addEventListener("mousemove", mouseMove);
+    //cvs.addEventListener("click", mouseClick);
     global.canvas = cvs
     global.ctx = cvs.getContext("2d");
     
@@ -20,7 +20,7 @@ function resetGame(){
     resetRand()
     global.autoResetCountdown = global.autoResetDelay
     
-    global.allBubbles = [new Bubble(v(.5,.4),v(0,3e-5)), new Bubble(v(.6,.7),v(0,-3e-5))]
+    global.allBubbles = []
 }
 
 // Main game loop

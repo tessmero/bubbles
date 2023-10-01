@@ -30,7 +30,7 @@ function draw(fps, t) {
             g.fillStyle = 'red'
             g.beginPath()
             g.moveTo(c.x,c.y)
-            g.arc(c.x,c.y,global.ballRadius*20,0,twopi)
+            g.arc(c.x,c.y,global.bubbleRad[1],0,twopi)
             g.fill()
         })
     }

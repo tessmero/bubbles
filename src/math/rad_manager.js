@@ -29,8 +29,17 @@ function updateBubbleRadPhysics(dt){
     var n = global.nRadii
     var mn = m*n
     for( var i = 0 ; i < mn ; i++ ){
+        if( ! global.bubbleRads[i] ) continue
         global.bubbleRadVels[i] *= (1.0-dt*global.brFriction)
         global.bubbleRads[i] += global.bubbleRadVels[i]*dt
+    }
+}
+
+function deleteBubble(rmi){
+    var n = global.nRadii
+    for( var j = 0 ; j < n ; j++ ){
+        global.bubbleRads[rmi+j] = null
+        global.bubbleRadLims[rmi+j] = null
     }
 }
 
@@ -52,7 +61,7 @@ function getMaxRad(rmi){
 }
 
 // called in bubble.js constructor
-function getNewBubbleIndex(){
+function getNewBubbleIndex(rad){
     var br = global.bubbleRads
     var m = global.maxBubbles
     var n = global.nRadii
@@ -64,8 +73,8 @@ function getNewBubbleIndex(){
             
             // set starting radius
             for( var j = 0 ; j < n ; j++ ){
-                br[i+j] = global.defaultBubbleRad
-                global.bubbleRadLims[i+j] = global.defaultBubbleRad
+                br[i+j] = rad
+                global.bubbleRadLims[i+j] = rad
             }
             return i
         }

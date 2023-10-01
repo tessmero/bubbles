@@ -17,18 +17,20 @@ function update(dt) {
         for( var j = i+1 ; j < n ; j ++ ){
             var b = allb[j]
             var d2 = a.pos.sub(b.pos).m2()
-            if( d2 < (a.mr2+b.mr2) ){
+            if( d2 < 2*(a.mr2+b.mr2) ){
                 
                 //found intersecting pair
                 var ints = getCircleIntersections(a.pos.x,a.pos.y,a.maxRad, b.pos.x,b.pos.y,b.maxRad )
                 global.debugLines.push( [a.pos,b.pos] )
                 global.debugLines.push( ints )
-                a.limitRads( ...ints )
-                b.limitRads( ...ints )
+                a.limitRads( ...ints, dt)
+                b.limitRads( ...ints, dt )
                 
             }
         }
     }
+    
+    updateBubbleRadPhysics(dt)
     
     
     

@@ -20,7 +20,7 @@ function resetGame(){
     resetRand()
     global.autoResetCountdown = global.autoResetDelay
     
-    global.allBubbles = [new Bubble(v(.5,.5),v(0,0)), new Bubble(v(.6,.6),v(0,0))]
+    global.allBubbles = [new Bubble(v(.5,.4),v(0,3e-5)), new Bubble(v(.6,.7),v(0,-3e-5))]
 }
 
 // Main game loop

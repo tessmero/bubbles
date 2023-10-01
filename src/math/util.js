@@ -49,7 +49,7 @@ function segmentsIntersection(a1,a2,b1,b2) {
             const intersectionX = x1 + t1 * (x2 - x1);
             const intersectionY = y1 + t1 * (y2 - y1);
 
-            return { x: intersectionX, y: intersectionY };
+            return v( intersectionX, intersectionY );
         }
     }
 

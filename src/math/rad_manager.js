@@ -10,7 +10,8 @@ function initBubbleRads(){
     var n = global.nRadii
     
     global.bubbleRads = new Array(m*n).fill(null)
-    global.bubbleRadVels = new Array(m*n).fill(null)
+    global.bubbleRadLims = new Array(m*n).fill(null)
+    global.bubbleRadVels = new Array(m*n).fill(0)
     global.bubbleRadSin = new Array(n).fill(null)
     global.bubbleRadCos = new Array(n).fill(null)
     
@@ -21,6 +22,16 @@ function initBubbleRads(){
         global.bubbleRadCos[i] = Math.cos(a)
     }
     
+}
+
+function updateBubbleRadPhysics(dt){
+    var m = global.maxBubbles
+    var n = global.nRadii
+    var mn = m*n
+    for( var i = 0 ; i < mn ; i++ ){
+        global.bubbleRadVels[i] *= (1.0-dt*global.brFriction)
+        global.bubbleRads[i] += global.bubbleRadVels[i]*dt
+    }
 }
 
 // called in setup.js resetGame()
@@ -53,7 +64,8 @@ function getNewBubbleIndex(){
             
             // set starting radius
             for( var j = 0 ; j < n ; j++ ){
-                br[i+j] = .1
+                br[i+j] = global.defaultBubbleRad
+                global.bubbleRadLims[i+j] = global.defaultBubbleRad
             }
             return i
         }

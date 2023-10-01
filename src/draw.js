@@ -20,8 +20,9 @@ function draw(fps, t) {
     g.fill()
     
     // draw bubble debug
-    global.allBubbles.forEach( b => b.drawDebug(g) )
-    
+    if( global.debugBubbles ){
+        global.allBubbles.forEach( b => b.drawDebug(g) )
+    }
     
     // debug draw corners
     if( false ){
@@ -35,7 +36,7 @@ function draw(fps, t) {
     }
 
     //debug
-    if( true && global.debugLines ){
+    if( global.showDebugLines && global.debugLines ){
         g.lineWidth = .001
         g.strokeStyle = 'red'
         g.beginPath()

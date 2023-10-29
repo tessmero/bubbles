@@ -5,11 +5,11 @@ function spawnBubble(){
         return
     }
     
-    var side = randInt(0,4)   
+    var side = randInt(0,2)*2   
     var a = global.screenCorners[side]
     var b = global.screenCorners[(side+1)%4]
     var pos = va(a,b,randRange(.4,.6))
-    pos = pos.add( pos.sub(global.screenCenter).mul(.2) )
+    pos = pos.add( pos.sub(global.screenCenter).mul(global.allBubbles.length > 0 ? 1 : .1) )
     var vel = v(0,0)
     var m = global.bubbleGmag
     var g
@@ -37,7 +37,7 @@ function update(dt) {
     
     global.allBubbles = global.allBubbles.filter(b => {
         b.update(dt)
-        if( b.isOob() ){
+        if( b.eaten || b.isOob() ){
             deleteBubble(b.rmi)
             return false
         }
@@ -56,6 +56,17 @@ function update(dt) {
                 
                 //found intersecting pair
                 var ints = getCircleIntersections(a.pos.x,a.pos.y,a.maxRad, b.pos.x,b.pos.y,b.maxRad )
+                
+                // check if one is inside the other
+                if( ((d2<a.mr2) || (d2<b.mr2))  ){// && (null==segmentsIntersection(a.pos,b.pos,ints[0], ints[1])) ) {
+                    var rada = getAvgRad(i*global.nRadii)
+                    var radb = getAvgRad(j*global.nRadii)
+                    var smallerBubble = ((rada < radb) ? a : b)
+                    smallerBubble.eaten = true
+                    continue
+                }
+                
+                // limit rads for intersecting pair
                 global.debugLines.push( [a.pos,b.pos] )
                 global.debugLines.push( ints )
                 a.limitRads( ...ints, dt)

@@ -5,12 +5,14 @@ class Bubble {
         this.g = g
         this.targetRad = randRange(...global.bubbleRad)
         this.rmi = getNewBubbleIndex(this.targetRad)
+        
+        this.lightAngleIndex = Math.floor(-0.4*global.nRadii)
     }
     
     isOob(){
         var x = this.pos.x
         var y = this.pos.y
-        var m = global.bubbleRad[1]*2
+        var m = global.bubbleRad[1]*10
         return (x < -m) || (y < -m) || (x > 1+m) || (y > 1+m)
     }
     
@@ -50,6 +52,12 @@ class Bubble {
         for( var i = 0 ; i < global.nRadii ; i++ ){
             global.bubbleRadLims[this.rmi+i] = this.targetRad
         }
+        
+        // compute light angle
+        if( false ){
+            var angle = global.mousePos.sub(this.pos).getAngle()
+            this.lightAngleIndex = Math.floor( global.nRadii * angle  / twopi )
+        }
     }
 
     // limit rads to prevent crossing line a-b
@@ -76,19 +84,87 @@ class Bubble {
         }
     }
     
+    
     draw(g,dilate=0){
+        var start = this.edgePoint( 0, 1, dilate )
+        g.moveTo(...start)
+        for( var i = 1 ; i < global.nRadii ; i++ )
+            g.lineTo(...this.edgePoint( i, 1, dilate ))
+        g.closePath()//g.lineTo(...start)
+    }
+    
+    drawReflection(g,dilate=0){
         
-        for( var i = 0 ; i < global.nRadii ; i++ ){
-            var r = global.bubbleRads[this.rmi+i] + dilate
-            var x = this.pos.x + r * global.bubbleRadCos[i] 
-            var y = this.pos.y + r * global.bubbleRadSin[i]
-            if( i == 0 ){
-                g.moveTo(x,y)
+        var off,spread,ai,bi,r1,r2,start 
+        
+        off = -global.nRadii/30
+        spread = global.nRadii/30
+        ai = Math.floor( off-spread + this.lightAngleIndex )
+        bi = Math.floor( off+spread + this.lightAngleIndex )
+        r1 = .7
+        r2 = .9
+        start = this.edgePoint(ai,r1,dilate)
+        g.moveTo(...start)
+        for( var i = ai+1 ; i <= bi ; i++ )
+            g.lineTo(...this.edgePoint(i,r1,dilate))
+        for( var i = bi ; i >= ai ; i-- )
+            g.lineTo(...this.edgePoint(i,r2,dilate))
+        g.closePath()//g.lineTo(...start)
+        
+        off = global.nRadii/30
+        spread = global.nRadii/90
+        ai = Math.floor( off-spread + this.lightAngleIndex )
+        bi = Math.floor( off+spread + this.lightAngleIndex )
+        r1 = .78
+        r2 = .89
+        start = this.edgePoint(ai,r1,dilate)
+        g.moveTo(...start)
+        for( var i = ai+1 ; i <= bi ; i++ )
+            g.lineTo(...this.edgePoint(i,r1,dilate))
+        for( var i = bi ; i >= ai ; i-- )
+            g.lineTo(...this.edgePoint(i,r2,dilate))
+        g.closePath()//g.lineTo(...start)
+    }
+    
+    drawShadow(g, dilate=0){
+        
+        var off,spread,ai,bi,r1,r2,taper,roundr,n,first
+        
+        off = global.nRadii/2
+        spread = global.nRadii/4
+        ai = Math.floor( off-spread + this.lightAngleIndex )
+        bi = Math.floor( off+spread + this.lightAngleIndex )
+        r1 = .8
+        r2 = 1
+        taper = 1-r1
+        roundr = .1
+        n = bi-ai
+        first = true
+        for( var i = 0 ; i <= n ; i++ ) {
+            var cdi = Math.abs(i-(n/2)) 
+            var cdr = cdi / n
+            if( cdr < roundr ) cdr = roundr
+            var r = r1+taper * (cdr/.5)
+            var p = this.edgePoint(ai+i,r,dilate)
+            if( first ){
+                g.moveTo(...p)
+                first = false
             } else {
-                g.lineTo(x,y)
+                g.lineTo(...p)
             }
         }
-        
+        for( var i = bi ; i >= ai ; i-- )
+            g.lineTo(...this.edgePoint(i,r2,dilate))
+        g.closePath()
+    }
+    
+    edgePoint(i,r=1,dilate=0){
+        i = nnmod(i,global.nRadii)
+        r = r*global.bubbleRads[this.rmi+i] + dilate
+        return [
+            this.pos.x + r * global.bubbleRadCos[i],
+            this.pos.y + r * global.bubbleRadSin[i]
+        ]
     }
     
     drawDebug(g){

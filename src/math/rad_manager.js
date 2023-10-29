@@ -22,6 +22,18 @@ function initBubbleRads(){
         global.bubbleRadCos[i] = Math.cos(a)
     }
     
+    
+    // more trig funcs for lighting details
+    global.nLightScale = 100
+    n = global.nRadii * global.nLightScale
+    global.lightRadSin = new Array(n).fill(null)
+    global.lightRadCos = new Array(n).fill(null)
+    for( var i = 0 ; i < n ; i++ ){
+        var a = twopi*i/n
+        global.lightRadSin[i] = Math.sin(a)
+        global.lightRadCos[i] = Math.cos(a)
+    }
+    
 }
 
 function updateBubbleRadPhysics(dt){
@@ -41,6 +53,14 @@ function deleteBubble(rmi){
         global.bubbleRads[rmi+j] = null
         global.bubbleRadLims[rmi+j] = null
     }
+}
+
+function getAvgRad(rmi){
+    var n = global.nRadii
+    var total = 0
+    for( var j = 0 ; j < n ; j++ )
+        total += global.bubbleRads[rmi+j] 
+    return total/n
 }
 
 // called in setup.js resetGame()

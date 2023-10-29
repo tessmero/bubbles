@@ -15,3 +15,14 @@ open `test.html` to test locally, using source files in `src`
 
 run `python build.py` to concatenate all source files into one distributable file: `production.js`
 
+## Changelog
+
+### 2023-10-01
+
+- initial commit
+
+### 2023-10-29
+
+- added lighting effects
+- made animation smoother
+
